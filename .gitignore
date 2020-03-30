@@ -1,0 +1,13 @@
+*.pyc
+/.coverage
+/.mypy_cache/
+/.pytest_cache/
+/.tox/
+/*.egg-info
+/build/
+/dist/
+/MANIFEST
+.idea/
+elm-stuff/
+moparty.js
+mopidy_moparty/static/moparty.min.js
