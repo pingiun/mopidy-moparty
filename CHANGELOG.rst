@@ -3,7 +3,11 @@ Changelog
 *********
 
 
-v0.1.0 (UNRELEASED)
+v0.1.0
 ========================================
 
-- Initial release.
+Initial release. Moparty is a party clone but includes the additional following features:
+
+- View the full queue instead of just the current playing song
+- Skip is based on current participants instead of hardcoded in config
+
