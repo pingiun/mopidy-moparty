@@ -137,9 +137,9 @@ trackToElement buttons track =
     row [ spacing 16, width fill ]
         (buttons
             ++ [ column [ spacing 8, width fill ]
-                    [ row [ spacing 8, width fill ]
+                    [ paragraph [ spacing 8, width fill ]
                         [ text track.name
-                        , el smallFont <| text <| "(" ++ Maybe.withDefault "?:??" (Maybe.map lengthToTime track.length) ++ ")"
+                        , el smallFont <| text <| " (" ++ Maybe.withDefault "?:??" (Maybe.map lengthToTime track.length) ++ ")"
                         ]
                     , paragraph (width fill :: smallFont) [ text <| Maybe.withDefault "" (Maybe.map .name track.album) ++ " by " ++ (String.join " & " <| List.map .name track.artists) ]
                     ]

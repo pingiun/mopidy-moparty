@@ -1,6 +1,6 @@
 module Home exposing (Model, Msg, init, subscriptions, update, view)
 
-import Element exposing (Element, column, el, fill, fillPortion, link, padding, row, spacing, text, width, wrappedRow)
+import Element exposing (Element, column, el, fill, fillPortion, link, padding, paragraph, row, spacing, text, width, wrappedRow)
 import Element.Background as Background
 import Element.Border as Border
 import Element.Font as Font
@@ -120,10 +120,20 @@ update msg model =
                     ( model, Cmd.none )
 
         UpdateSearch content ->
-            ( { model | searchContent = content }, Cmd.none )
+            case content of
+                "" ->
+                    ( { model | searchResults = [], searchContent = content }, Cmd.none )
+
+                _ ->
+                    ( { model | searchContent = content }, Cmd.none )
 
         EnterWasPressed ->
-            ( { model | message = "" }, librarySearchTrack model.searchContent GotSearchResult |> request )
+            case model.searchContent of
+                "" ->
+                    ( { model | message = "" }, Cmd.none )
+
+                _ ->
+                    ( { model | message = "Loading..." }, librarySearchTrack model.searchContent GotSearchResult |> request )
 
         GetTrackList ->
             ( model, Cmd.batch [ getTrackList, getPosition ] )
@@ -131,10 +141,10 @@ update msg model =
         GotSearchResult result ->
             case result of
                 Ok tracks ->
-                    ( { model | searchResults = tracks }, Cmd.none )
+                    ( { model | message = "", searchResults = tracks }, Cmd.none )
 
                 Err _ ->
-                    ( model, Cmd.none )
+                    ( { model | message = "Error occured" }, Cmd.none )
 
         DoTrackAdd uri ->
             ( { model | message = "" }, addTrack uri )
@@ -192,7 +202,14 @@ buttonRow model =
                     button (darker <| darker good) PlayPause <| icon "play" "Play"
             , button primary Skip <| icon "step-forward" "Skip current song"
             ]
-        , column [ spacing 8, Border.rounded 3, padding 16, width (fillPortion 1), Background.color lightgrey ] (upNext model)
+        , column [ spacing 8, Border.rounded 3, padding 16, width (fillPortion 1), Background.color lightgrey ]
+            (case model.queue of
+                [] ->
+                    [ text "Nothing in queue" ]
+
+                _ ->
+                    upNext model
+            )
         ]
 
 
@@ -201,10 +218,10 @@ upNextElem model track =
         played =
             Maybe.withDefault "" (Maybe.map (\x -> lengthToTime x ++ " / ") model.position)
     in
-    row [ spacing 8 ]
+    paragraph []
         [ text track.name
-        , el smallFont <| text <| "by " ++ (String.join " & " <| List.map .name track.artists)
-        , el smallFont <| text <| "(" ++ played ++ Maybe.withDefault "?:??" (Maybe.map lengthToTime track.length) ++ ")"
+        , el smallFont <| text <| " by " ++ (String.join " & " <| List.map .name track.artists)
+        , el smallFont <| text <| " (" ++ played ++ Maybe.withDefault "?:??" (Maybe.map lengthToTime track.length) ++ ")"
         ]
 
 
@@ -223,8 +240,10 @@ upNext model =
                         second :: ys ->
                             row [ spacing 8 ]
                                 [ smallIcon "arrow-right" "Up next"
-                                , el smallFont <| text (second.name ++ " by " ++ (String.join " & " <| List.map .name second.artists))
-                                , el smallFont <| text <| "(" ++ Maybe.withDefault "?:??" (Maybe.map lengthToTime second.length) ++ ")"
+                                , paragraph []
+                                    [ el smallFont <| text (second.name ++ " by " ++ (String.join " & " <| List.map .name second.artists))
+                                    , el smallFont <| text <| "(" ++ Maybe.withDefault "?:??" (Maybe.map lengthToTime second.length) ++ ")"
+                                    ]
                                 ]
                                 :: (case ys of
                                         [] ->
@@ -245,13 +264,14 @@ upNext model =
 
 
 searchRow model =
-    row [ width fill ]
+    row [ width fill, spacing 16 ]
         [ Input.text [ Input.focusedOnLoad, onEnter EnterWasPressed ]
             { label = Input.labelHidden "Search"
             , onChange = UpdateSearch
             , placeholder = Just <| Input.placeholder [] (text "Search")
             , text = model.searchContent
             }
+        , button good EnterWasPressed <| icon "search" "Search"
         ]
 
 
