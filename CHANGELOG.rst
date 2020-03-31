@@ -2,6 +2,13 @@
 Changelog
 *********
 
+v0.2.0
+========================================
+
+- Search results now clear when search bar is empty
+- Added loading message
+- Added search button
+- Better text wrapping
 
 v0.1.0
 ========================================
