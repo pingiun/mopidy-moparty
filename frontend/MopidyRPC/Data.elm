@@ -1,4 +1,4 @@
-module MopidyRPC.Data exposing (Album, Artist, PlaybackState(..), TlTrack, Track, Update(..), jsonRCPResultDecoder, playBackStateDecoder, searchResultDecoder, tlTrackDecoder, trackDecoder, updateDecoder)
+module MopidyRPC.Data exposing (Album, Artist, PlaybackState(..), TlTrack, Track, Update(..), jsonRCPResultDecoder, playBackStateDecoder, searchResultDecoder, tlTrackDecoder, updateDecoder)
 
 import Json.Decode exposing (..)
 import Json.Decode.Pipeline exposing (optional, required)
@@ -181,7 +181,7 @@ updateFromType string =
             map seeked (field "time_position" int)
 
         x ->
-            fail <| Debug.log "Unknown update" <| "Invalid type: " ++ x
+            fail <| "Invalid type: " ++ x
 
 
 updateDecoder : Decoder Update

@@ -4,11 +4,8 @@ import Element exposing (Element, el, fill, padding, row, spacing, text, width)
 import Element.Background as Background
 import Element.Border as Border
 import Element.Input as Input
-import Http
-import Json.Decode as Decode exposing (Decoder)
-import Json.Encode as J
 import List
-import MopidyRPC exposing (Error, librarySearchTrack, playbackGetState, playbackGetTimePosition, request, tracklistAdd, tracklistGetTracks)
+import MopidyRPC exposing (Error, librarySearchTrack, request, tracklistAdd)
 import MopidyRPC.Data as Data exposing (PlaybackState(..), TlTrack, Track)
 import Session
 import Utils exposing (brighter, button, good, icon, onEnter, primary, ruled, smallButton, trackToElement)

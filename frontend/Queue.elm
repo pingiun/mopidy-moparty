@@ -1,10 +1,9 @@
 module Queue exposing (Model, Msg, init, update, view)
 
-import Element exposing (Element, fill, row, spacing, text, width)
-import MopidyRPC exposing (Error, request, tracklistGetTracks)
-import MopidyRPC.Data as Data
+import Element exposing (Element, fill, text, width)
+import MopidyRPC.Data
 import Session
-import Utils exposing (button, linkButton, primary, ruled, trackToElement)
+import Utils exposing (linkButton, primary, ruled, trackToElement)
 
 
 type alias Model =

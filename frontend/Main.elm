@@ -115,7 +115,7 @@ update message model =
             ( updateSession { session | clientId = Just id } model, saveId id )
 
         MopidyUpdate value ->
-            case Debug.log "Update" <| D.decodeValue updateDecoder value of
+            case D.decodeValue updateDecoder value of
                 Ok TracklistChanged ->
                     if session.state == Stopped then
                         ( model, Cmd.batch [ getTrackList, play ] )

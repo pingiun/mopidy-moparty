@@ -3,7 +3,7 @@ module MopidyRPC exposing (..)
 import Http
 import Json.Decode as D
 import Json.Encode as J
-import MopidyRPC.Data exposing (PlaybackState, TlTrack, Track, jsonRCPResultDecoder, playBackStateDecoder, searchResultDecoder, tlTrackDecoder, trackDecoder)
+import MopidyRPC.Data exposing (PlaybackState, TlTrack, Track, jsonRCPResultDecoder, playBackStateDecoder, searchResultDecoder, tlTrackDecoder)
 
 
 type Error

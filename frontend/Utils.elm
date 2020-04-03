@@ -1,6 +1,5 @@
 module Utils exposing (..)
 
-import Browser.Dom exposing (Error(..))
 import Element exposing (Element, column, el, fill, height, link, padding, paragraph, px, rgb255, row, spacing, text, width)
 import Element.Background as Background
 import Element.Border as Border
@@ -8,7 +7,7 @@ import Element.Font as Font
 import Element.Input as Input
 import Html.Events
 import Json.Decode as Decode
-import MopidyRPC.Data as Data exposing (TlTrack, Track)
+import MopidyRPC.Data exposing (TlTrack, Track)
 import Session exposing (Data)
 
 
