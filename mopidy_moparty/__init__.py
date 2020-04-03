@@ -2,13 +2,11 @@ import logging
 import math
 import pathlib
 import time
-from typing import Optional, Awaitable
-
-import tornado.web
-import tornado.escape
+from typing import Awaitable, Optional
 
 import pkg_resources
-
+import tornado.escape
+import tornado.web
 from mopidy import config, ext
 
 __version__ = pkg_resources.get_distribution("Mopidy-Moparty").version
@@ -98,7 +96,7 @@ def mopidy_app_factory(config, core):
             {"path": str(pathlib.Path(__file__).parent / "static" / "img")},
         ),
         (
-            "/(.*)",
+            "/.*()",
             tornado.web.StaticFileHandler,
             {
                 "path": str(
