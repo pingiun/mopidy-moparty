@@ -2,6 +2,13 @@
 Changelog
 *********
 
+v0.3.0
+========================================
+
+- Rewrite parts to work with a websocket connection
+- Url handling now works better
+- Playback status is shown on /queue page
+
 v0.2.0
 ========================================
 

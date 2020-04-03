@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <title>Moparty</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script src="moparty.min.js"></script>
+  <script src="/moparty/moparty.min.js"></script>
 </head>
 <body>
 <div id="elm"></div>
@@ -16,6 +16,11 @@
   app.ports.saveId.subscribe(function(data) {
     localStorage.setItem('clientId', JSON.stringify(data));
   });
+  var socket = new WebSocket(`ws://${window.location.host}/mopidy/ws/`);
+  socket.onmessage = function (event) {
+    var msg = JSON.parse(event.data);
+    app.ports.mopidyUpdates.send(msg);
+  };
   </script>
 </body>
 </html>

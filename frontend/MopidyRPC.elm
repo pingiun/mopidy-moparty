@@ -87,11 +87,11 @@ playbackGetTimePosition toMsg =
     }
 
 
-tracklistGetTracks : (Result Error (List Track) -> msg) -> Request msg (List Track)
+tracklistGetTracks : (Result Error (List TlTrack) -> msg) -> Request msg (List TlTrack)
 tracklistGetTracks toMsg =
     { toMsg = toMsg
-    , body = method "core.tracklist.get_tracks"
-    , decoder = D.list trackDecoder
+    , body = method "core.tracklist.get_tl_tracks"
+    , decoder = D.list tlTrackDecoder
     }
 
 

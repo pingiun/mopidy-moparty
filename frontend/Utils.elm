@@ -1,5 +1,6 @@
 module Utils exposing (..)
 
+import Browser.Dom exposing (Error(..))
 import Element exposing (Element, column, el, fill, height, link, padding, paragraph, px, rgb255, row, spacing, text, width)
 import Element.Background as Background
 import Element.Border as Border
@@ -7,7 +8,8 @@ import Element.Font as Font
 import Element.Input as Input
 import Html.Events
 import Json.Decode as Decode
-import MopidyRPC.Data as Data
+import MopidyRPC.Data as Data exposing (TlTrack, Track)
+import Session exposing (Data)
 
 
 normalFont =
@@ -22,7 +24,7 @@ grey =
     rgb255 186 189 182
 
 
-lightgrey =
+lightGrey =
     rgb255 240 240 240
 
 
@@ -38,12 +40,14 @@ warn =
     rgb255 240 48 112
 
 
-icon src desc =
-    Element.image [ width <| px 16, height <| px 16 ] { src = "img/" ++ src ++ ".svg", description = desc }
+icon : Data -> String -> String -> Element msg
+icon session src desc =
+    Element.image [ width <| px 16, height <| px 16 ] { src = session.makeUrl <| "/img/" ++ src ++ ".svg", description = desc }
 
 
-smallIcon src desc =
-    Element.image [ width <| px 8, height <| px 8 ] { src = "img/" ++ src ++ ".svg", description = desc }
+smallIcon : Data -> String -> String -> Element msg
+smallIcon session src desc =
+    Element.image [ width <| px 8, height <| px 8 ] { src = session.makeUrl <| "/img/" ++ src ++ ".svg", description = desc }
 
 
 hoverColor color =
@@ -132,7 +136,7 @@ ruled attrs { data, viewf } =
             column attrs []
 
 
-trackToElement : List (Element msg) -> Data.Track -> Element msg
+trackToElement : List (Element msg) -> Track -> Element msg
 trackToElement buttons track =
     row [ spacing 16, width fill ]
         (buttons
@@ -145,3 +149,13 @@ trackToElement buttons track =
                     ]
                ]
         )
+
+
+mapCar : (a -> c) -> ( a, b ) -> ( c, b )
+mapCar f ( x, y ) =
+    ( f x, y )
+
+
+mapCdr : (b -> c) -> ( a, b ) -> ( a, c )
+mapCdr f ( x, y ) =
+    ( x, f y )

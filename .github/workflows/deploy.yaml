@@ -13,8 +13,8 @@ jobs:
       uses: actions/setup-python@v1
       with:
         python-version: '3.x'
-    - uses: jorelali/setup-elm@v1
     - name: Set up Elm
+      uses: jorelali/setup-elm@v1
       with:
         elm-version: 0.19.1
     - name: Install dependencies

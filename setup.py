@@ -1,8 +1,8 @@
 import distutils.cmd
 import subprocess
 
-from setuptools import setup
 import setuptools.command.build_py
+from setuptools import setup
 
 
 class BuildPyCommand(setuptools.command.build_py.build_py):

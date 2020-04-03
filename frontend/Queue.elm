@@ -9,54 +9,32 @@ import Utils exposing (button, linkButton, primary, ruled, trackToElement)
 
 type alias Model =
     { session : Session.Data
-    , queue : Maybe (List Data.Track)
     }
 
 
 type Msg
-    = GotTrackList (Result Error (List Data.Track))
-    | None
+    = None
 
 
 init : Session.Data -> ( Model, Cmd Msg )
 init data =
     ( { session = data
-      , queue = Nothing
       }
-    , getTrackList
+    , Cmd.none
     )
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        GotTrackList result ->
-            case result of
-                Ok tracks ->
-                    ( { model | queue = Just tracks }, Cmd.none )
-
-                Err _ ->
-                    ( model, Cmd.none )
-
         None ->
             ( model, Cmd.none )
 
 
-view : Model -> ( String, List (Element Msg) )
+view : Model -> ( String, List (Element Msg), List (Element Msg) )
 view model =
     ( "Moparty Queue"
-    , [ linkButton primary ".." <| text "Back"
-      , case model.queue of
-            Just tracks ->
-                ruled [ width fill ] { data = tracks, viewf = trackToElement [] }
-
-            Nothing ->
-                text "Loading..."
+    , [ ruled [ width fill ] { data = List.map .track model.session.queue, viewf = trackToElement [] }
       ]
+    , [ linkButton primary (model.session.makeUrl "/") <| text "Back" ]
     )
-
-
-getTrackList : Cmd Msg
-getTrackList =
-    tracklistGetTracks GotTrackList
-        |> request

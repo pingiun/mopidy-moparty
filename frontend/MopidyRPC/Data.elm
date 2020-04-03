@@ -1,4 +1,4 @@
-module MopidyRPC.Data exposing (Album, Artist, PlaybackState(..), TlTrack, Track, jsonRCPResultDecoder, playBackStateDecoder, searchResultDecoder, tlTrackDecoder, trackDecoder)
+module MopidyRPC.Data exposing (Album, Artist, PlaybackState(..), TlTrack, Track, Update(..), jsonRCPResultDecoder, playBackStateDecoder, searchResultDecoder, tlTrackDecoder, trackDecoder, updateDecoder)
 
 import Json.Decode exposing (..)
 import Json.Decode.Pipeline exposing (optional, required)
@@ -120,3 +120,70 @@ tlTrackDecoder =
 searchResultDecoder : Decoder (List Track)
 searchResultDecoder =
     map (Maybe.withDefault []) <| maybe <| field "tracks" <| list trackDecoder
+
+
+type Update
+    = TracklistChanged
+    | TrackPlaybackStarted { tlTrack : TlTrack }
+    | TrackPlaybackPaused { tlTrack : TlTrack, timePosition : Int }
+    | TrackPlaybackResumed { tlTrack : TlTrack, timePosition : Int }
+    | TrackPlaybackEnded { tlTrack : TlTrack, timePosition : Int }
+    | PlaybackStateChanged { oldState : PlaybackState, newState : PlaybackState }
+    | Seeked { timePosition : Int }
+
+
+trackPlaybackPaused tlTrack timePosition =
+    TrackPlaybackPaused { tlTrack = tlTrack, timePosition = timePosition }
+
+
+playbackStateChanged oldState newState =
+    PlaybackStateChanged { oldState = oldState, newState = newState }
+
+
+seeked timePosition =
+    Seeked { timePosition = timePosition }
+
+
+trackPlaybackEnded tlTrack timePosition =
+    TrackPlaybackEnded { tlTrack = tlTrack, timePosition = timePosition }
+
+
+trackPlaybackResumed tlTrack timePosition =
+    TrackPlaybackResumed { tlTrack = tlTrack, timePosition = timePosition }
+
+
+trackPlaybackStarted tlTrack =
+    TrackPlaybackStarted { tlTrack = tlTrack }
+
+
+updateFromType : String -> Decoder Update
+updateFromType string =
+    case string of
+        "tracklist_changed" ->
+            succeed TracklistChanged
+
+        "track_playback_started" ->
+            map trackPlaybackStarted (field "tl_track" tlTrackDecoder)
+
+        "track_playback_paused" ->
+            map2 trackPlaybackPaused (field "tl_track" tlTrackDecoder) (field "time_position" int)
+
+        "track_playback_resumed" ->
+            map2 trackPlaybackResumed (field "tl_track" tlTrackDecoder) (field "time_position" int)
+
+        "track_playback_ended" ->
+            map2 trackPlaybackEnded (field "tl_track" tlTrackDecoder) (field "time_position" int)
+
+        "playback_state_changed" ->
+            map2 playbackStateChanged (field "old_state" playBackStateDecoder) (field "new_state" playBackStateDecoder)
+
+        "seeked" ->
+            map seeked (field "time_position" int)
+
+        x ->
+            fail <| Debug.log "Unknown update" <| "Invalid type: " ++ x
+
+
+updateDecoder : Decoder Update
+updateDecoder =
+    field "event" string |> andThen updateFromType
