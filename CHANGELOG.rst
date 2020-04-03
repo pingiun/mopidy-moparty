@@ -2,7 +2,7 @@
 Changelog
 *********
 
-v0.3.0
+v0.3.2
 ========================================
 
 - Rewrite parts to work with a websocket connection
