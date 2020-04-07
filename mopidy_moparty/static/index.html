@@ -10,16 +10,19 @@
 <div id="elm"></div>
   <script>
   var app = Elm.Main.init({
-    node: document.getElementById('elm'),
-    flags: { urlPrefix: 'moparty', clientId: JSON.parse(localStorage.getItem('clientId')) }
+      node: document.getElementById('elm'),
+      flags: { urlPrefix: 'moparty', clientId: JSON.parse(localStorage.getItem('clientId')) }
   });
   app.ports.saveId.subscribe(function(data) {
-    localStorage.setItem('clientId', JSON.stringify(data));
+      localStorage.setItem('clientId', JSON.stringify(data));
   });
   var socket = new WebSocket(`ws://${window.location.host}/mopidy/ws/`);
   socket.onmessage = function (event) {
-    var msg = JSON.parse(event.data);
-    app.ports.mopidyUpdates.send(msg);
+      var msg = JSON.parse(event.data);
+      app.ports.mopidyUpdates.send(msg);
+  };
+  window.onfocus = function (event) {
+      app.ports.focus.send();
   };
   </script>
 </body>

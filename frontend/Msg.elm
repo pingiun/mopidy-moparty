@@ -24,4 +24,5 @@ type Msg
     | Pause
     | Skip
     | DoAlive
+    | Refresh
     | None

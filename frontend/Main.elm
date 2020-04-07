@@ -183,6 +183,9 @@ update message model =
         UpdatePosition ->
             ( updateSession { session | position = session.position + 1000 } model, Cmd.none )
 
+        Refresh ->
+            ( model, getInit )
+
         None ->
             ( model, Cmd.none )
 
@@ -220,6 +223,7 @@ subscriptions model =
     in
     Sub.batch
         [ mopidyUpdates <| MopidyUpdate
+        , focus <| always Refresh
         , Time.every (10 * 1000) <| always DoAlive
         , if session.state == Playing then
             Time.every 1000 <| always UpdatePosition
@@ -300,3 +304,6 @@ port saveId : Int -> Cmd msg
 
 
 port mopidyUpdates : (J.Value -> msg) -> Sub msg
+
+
+port focus : (J.Value -> msg) -> Sub msg
